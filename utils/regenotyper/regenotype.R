@@ -291,8 +291,9 @@ for (group in unique(probs_raw$group)){
     tab2[tab2$valid_bins==0,]$confidence_hard_over_second = 100
     tab = tab2[ , !(names(tab2) %in% c('valid_bins'))]
     #t2 = as.data.frame(lapply(tab, as.character))
-
-    tab[tab$confidence_hard_over_second==0,]$pred_hard = '0|0'
+    if (length(which(tab$confidence_hard_over_second==0))>0){
+      tab[tab$confidence_hard_over_second==0,]$pred_hard = '0|0'
+      }
 
 
     #if (!is.null(CN)){
