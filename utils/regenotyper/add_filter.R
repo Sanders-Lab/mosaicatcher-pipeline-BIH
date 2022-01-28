@@ -34,7 +34,10 @@ option_list = list(
 # Parse input
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
-
+####local testing
+#opt$table='/home/hufsah/HILBERT_gpfs/HGSVC/ARBIGENT_2022/pipeline/regenotyper_allsamples_bulk/arbigent_results/res.csv'
+#opt$normal_names<-1
+#opt$outfile<-'/home/hufsah/HILBERT_gpfs/HGSVC/ARBIGENT_2022/pipeline/regenotyper_allsamples_bulk/arbigent_results/res_verdicted.vcf'
 callmatrix_link = opt$table
 normal_names = opt$normal_names
 outfile = opt$outfile
@@ -73,10 +76,28 @@ cm = count_homhetrefetc(cm, n_samples)
 cm$valid_bins = as.numeric(cm$valid_bins)
 
 # Mendel
-cm = add_mendelfails(cm)
+#Hufsah 28.1.22
+#Only run mendel Check if all trios are present
+if ("NA19238" %in% colnames(cm)& "NA19239" %in% colnames(cm)&
+    "NA19240" %in% colnames(cm)& "HG00512" %in% colnames(cm)&
+    "HG00513" %in% colnames(cm)& "HG00514" %in% colnames(cm)&
+    "HG00731" %in% colnames(cm) & "HG00732" %in% colnames(cm)&
+    "HG00733" %in% colnames(cm)){
+  cm = add_mendelfails(cm)
+}else{
+  cm$mendel1<-NA
+  cm$mendel2<-NA
+  cm$mendel3<-NA
+  cm$mendelfails=NA
+}
 
 # Filter
-cm = apply_filter_new(cm, samples)
+if(length(samples)>1){
+  cm = apply_filter_new(cm, samples)
+}else{
+  cm=apply_filter_onesample(cm,samples)
+}
+  
 
 # Clean
 cm[,c('mendel1','mendel2','mendel3')] = NULL
