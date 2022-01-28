@@ -120,8 +120,6 @@ count_homhetrefetc <- function(cm_f, n_samples){
 
 
 apply_filter_new <- function(cm_f, samples){
-
-
   # Judgement day: filter. 
   # First some preparations
   cm_f$gt_events = cm_f$nhom + cm_f$nhet 
@@ -163,7 +161,7 @@ apply_filter_new <- function(cm_f, samples){
   cm_f_i = cm_f[,cols_to_add]
 
   # Collapse the verdicts
-  cm_f$verdict = apply(cm_f_i, 1, function(x) paste(names(cm_f_i)[x == T], collapse = "-"))
+  cm_f$verdict = apply(cm_f_i, 1, function(x) paste(names(cm_f_i)[x == T & !is.na(x)], collapse = "-"))
 
   # If none of the above criteria applied, the verdict is a 'pass'
   cm_f[cm_f$verdict == '',]$verdict = 'pass'
