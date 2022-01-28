@@ -146,7 +146,6 @@ if (!is.null(CN)){
 
 # Remove invalid bins from probs_raw
 probs_raw = p2[!is.na(p2$sample),]
-probs_raw = probs_raw[probs_raw$chrom == 'chr22',]
 
 
 #############################################################
