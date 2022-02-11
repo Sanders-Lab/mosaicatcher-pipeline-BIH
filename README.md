@@ -31,14 +31,16 @@ the workflow goes through the following steps:
 While there are different options for the installation/execution (see below),
 the following steps are shared by all of them:
 
-1. **Download this pipeline.**
+1. **Download this pipeline and checkout to arbitrary-segments branch.**
 
    ```
    git clone https://github.com/friendsofstrandseq/pipeline
+   git checkout arbitrary-segments
    ```
 
-2. **Configuration.** In the config file `Snake.config.json`, specify the reference genome,
-   the chromosomes you would like to analyse.
+2. **Configuration.** In the config file `.json`, specify the reference genome,
+   the chromosomes you would like to analyse and path to mosaiCatcher installation.
+   Use 'Snake.config.json' for GRCh38 and 'Snake.config.chm13.json' for CHM13.
 
 3. **Add your data.** Create a subdirectory `bam/sampleName/`	and place the single-cell BAM files (one file per cell) in there:
 
@@ -54,8 +56,12 @@ the following steps are shared by all of them:
    are indexed and have PCR duplicates marked (the latter is especially relevant for
    single-cell data).
 
-5. **SNP call set.** If available, specify SNV calls (VCF) in `Snake.config.json`.
-   Note that the sample name in the VCF must match the one in the BAM files.
+5. **SNP call set.** If available, specify SNV calls (VCF) in `Snake.config.json`/
+   'Snake.config.chm13.json'. Note that the sample name in the VCF must match the 
+   one in the BAM files.
+   
+6. **Mappability track.** A simulation based mappability track is to be provided in
+   folder 'arbigent_norm'. 
 
 **Note:** Multiple samples can be run simultaneously. Just create different subfolders
 below `bam/`. The same settings from the `Snake.config.json` config files are
@@ -226,3 +232,12 @@ The provided environment `conda-environment.yml` is the result of running:
   ```
 
 This avoids some annoying version downgrades that sometimes happen when creating an environment incrementally.
+
+# ArbiGent pipeline
+
+ArbiGent pipleine is available under 'utils/regenotyper/' and should be run only after
+the successful completion of mosaiCatcher pipline. In Snakemake file 'path_to_pipe'
+should be set to the directory from where mosaiCatcher pipeline was executed i.e.
+where the 'sv_probabilities/' are present. On successful completion, the detailed genotypes 
+along with some quality checks can be found at 'regenotyper_allsamples_bulk/arbigent_results/'.
+
