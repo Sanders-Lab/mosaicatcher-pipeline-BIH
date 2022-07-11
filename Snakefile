@@ -96,6 +96,7 @@ if config["mode"] != "download_data":
 
     # IMPORT SMK RULES
 
+    # include: "workflow/rules/cleaning.smk"
     include: "workflow/rules/input_check.smk"
     include: "workflow/rules/setup.smk"
     include: "workflow/rules/count.smk"

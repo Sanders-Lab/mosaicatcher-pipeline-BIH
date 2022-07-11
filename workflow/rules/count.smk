@@ -27,15 +27,18 @@ rule mosaic_count:
         info   = config["output_location"] + "counts/{sample}/{sample}.info"
     log:
         config["output_location"] + "log/counts/{sample}/mosaic_count.log"
-    container:
-        "library://weber8thomas/remote-build/mosaic:0.3"
+    # container:
+    #     "library://weber8thomas/remote-build/mosaic:0.3"
+    conda:
+        "../envs/mc_bioinfo_tools.yaml"
     params:
         window = config["window"]
     resources:
         mem_mb = get_mem_mb,
     shell:
+        # /mosaicatcher/build/mosaic count \
         """
-        /mosaicatcher/build/mosaic count \
+        mosaicatcher count \
             --verbose \
             --do-not-blacklist-hmm \
             -o {output.counts} \

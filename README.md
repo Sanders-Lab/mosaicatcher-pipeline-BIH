@@ -91,6 +91,7 @@ snakemake --cores 12 --config mode=mosaiclassifier plot=True input_bam_location=
 - [ ] Upstream QC pipeline and FastQ handle
 - [ ] Pooling samples
 - [ ] Self-handling of low-coverage cells
+- [ ] Y chromosome analysis
 
 ## Small issues to fix
 
