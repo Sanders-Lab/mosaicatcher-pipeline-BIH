@@ -24,7 +24,7 @@ rule mosaic_count:
         excl = ancient(config["output_location"] + "config/exclude_file"),
     output:
         counts = config["output_location"] + "counts/{sample}/{sample}.txt.fixme.gz",
-        info   = config["output_location"] + "counts/{sample}/{sample}.info"
+        info   = config["output_location"] + "counts/{sample}/{sample}.info_raw"
     log:
         config["output_location"] + "log/counts/{sample}/mosaic_count.log"
     # container:
@@ -60,6 +60,18 @@ rule order_mosaic_count_output:
         df = df.sort_values(by=["sample", "cell", "chrom", "start"])
         df.to_csv(output[0], index=False, compression="gzip", sep="\t")
 
+
+rule process_mosaic_info:
+    input:
+        info_raw = config["output_location"] + "counts/{sample}/{sample}.info_raw"
+    output:
+        info = config["output_location"] + "counts/{sample}/{sample}.info"
+    run:
+        import pandas as pd
+        df = pd.read_csv(input.info_raw, skiprows=13, sep="\t")
+        df["pass1"] = df["pass1"].astype(int)
+        df = df.loc[df["pass1"] == 1]
+        df.to_csv(output.info, index=False, sep='\t')
 
 # CHECKME : to keep or to improve ? @jeong @mc @kg
 ################################################################################

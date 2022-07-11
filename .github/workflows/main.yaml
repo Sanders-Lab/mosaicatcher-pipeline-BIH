@@ -46,7 +46,7 @@ jobs:
           directory: .
           snakefile: ./Snakefile
           stagein: " mamba env remove -n snakemake && mamba create -y -n snakemake -c conda-forge -c bioconda snakemake pandas pysam tqdm imagemagick && source activate snakemake"
-          args: '--cores 2 --config chromosomes="[chr21]" mode=count plot=False input_bam_location=.tests/data/ output_location=.tests/output/ snv_sites_to_genotype=.tests/external_data/1000G_chr21.vcf.gz reference=.tests/external_data/chr21.fna  --use-conda --latency-wait 60'
+          args: "--cores 2 --config chromosomes='[chr21]' mode=count plot=False input_bam_location=.tests/data/ output_location=.tests/output/ snv_sites_to_genotype=.tests/external_data/1000G_chr21.vcf.gz reference=.tests/external_data/chr21.fna  --use-conda --latency-wait 60"
 
       #     - name: Set up Python 3.8
       #       uses: actions/setup-python@v2
