@@ -26,13 +26,15 @@ rule segmentation:
         config["output_location"] + "log/segmentation/{sample}/{sample}.log"
     params:
         min_num_segs = lambda wc: math.ceil(200000 / float(config["window"]))  # bins to represent 200 kb
-    container:
-        "library://weber8thomas/remote-build/mosaic:0.3"
+    # container:
+    #     "library://weber8thomas/remote-build/mosaic:0.3"
+    conda:
+        "../envs/mc_bioinfo_tools.yaml"
     resources:
         mem_mb = get_mem_mb,
     shell:
         """
-        /mosaicatcher/build/mosaic segment \
+        mosaicatcher segment \
         --remove-none \
         --forbid-small-segments {params.min_num_segs} \
         -M 50000000 \
@@ -74,8 +76,10 @@ rule segment_one_cell:
         config["output_location"] + "segmentation/{sample}/segmentation-per-cell/{cell}.txt"
     log:
         config["output_location"] + "log/segmentation/{sample}/segmentation-per-cell/{cell}.log"
-    container:
-        "library://weber8thomas/remote-build/mosaic:0.3"
+    # container:
+    #     "library://weber8thomas/remote-build/mosaic:0.3"
+    conda:
+        "../envs/mc_bioinfo_tools.yaml"
     params:
         # mc_command = config["mosaicatcher"],
         min_num_segs = lambda wc: math.ceil(200000 / float(config["window"])) # bins to represent 200 kb
@@ -83,7 +87,7 @@ rule segment_one_cell:
         mem_mb = get_mem_mb,
     shell:
         """
-        /mosaicatcher/build/mosaic segment \
+        mosaicatcher segment \
         --remove-none \
         --forbid-small-segments {params.min_num_segs} \
         -M 50000000 \

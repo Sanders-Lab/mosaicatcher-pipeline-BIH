@@ -65,13 +65,20 @@ rule process_mosaic_info:
     input:
         info_raw = config["output_location"] + "counts/{sample}/{sample}.info_raw"
     output:
-        info = config["output_location"] + "counts/{sample}/{sample}.info"
+        info = config["output_location"] + "counts/{sample}/{sample}.info",
+        info_removed = config["output_location"] + "counts/{sample}/{sample}.info_rm"
     run:
+        shell("grep '^#' {input.info_raw} > {output.info}")
+        shell("grep '^#' {input.info_raw} > {output.info_removed}")
         import pandas as pd
         df = pd.read_csv(input.info_raw, skiprows=13, sep="\t")
         df["pass1"] = df["pass1"].astype(int)
-        df = df.loc[df["pass1"] == 1]
-        df.to_csv(output.info, index=False, sep='\t')
+        df_kept = df.loc[df["pass1"] == 1]
+        print(df)
+        df_removed = df.loc[df["pass1"] == 0]
+        print(df_removed)
+        df_kept.to_csv(output.info, index=False, sep='\t', mode='a')
+        df_removed.to_csv(output.info_removed, index=False, sep='\t', mode='a')
 
 # CHECKME : to keep or to improve ? @jeong @mc @kg
 ################################################################################

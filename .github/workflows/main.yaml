@@ -47,6 +47,13 @@ jobs:
           snakefile: ./Snakefile
           stagein: " mamba env remove -n snakemake && mamba create -y -n snakemake -c conda-forge -c bioconda snakemake pandas pysam tqdm imagemagick && source activate snakemake"
           args: "--cores 2 --configfile .tests/config/test_config.yaml  --use-conda"
+      - name: Testing report
+        uses: snakemake/snakemake-github-action@v1.23.0
+        with:
+          directory: .
+          snakefile: ./Snakefile
+          stagein: " mamba env remove -n snakemake && mamba create -y -n snakemake -c conda-forge -c bioconda snakemake pandas pysam tqdm imagemagick && source activate snakemake"
+          args: "--cores 2 --configfile .tests/config/test_config.yaml --use-conda --report .tests/output/report.zip"
 
       #     - name: Set up Python 3.8
       #       uses: actions/setup-python@v2
