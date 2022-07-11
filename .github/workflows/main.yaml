@@ -12,7 +12,7 @@ jobs:
   Formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Formatting
         uses: github/super-linter@v4
@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Linting
-        uses: snakemake/snakemake-github-action@v1.22.0
+        uses: snakemake/snakemake-github-action@v1.23.0
         with:
           directory: .
           snakefile: ./Snakefile
@@ -39,9 +39,9 @@ jobs:
     #   - Linting
     #   - Formatting
     steps:
-      - uses: actions/checkout@v2*
+      - uses: actions/checkout@v2
       - name: Testing data
-        uses: snakemake/snakemake-github-action@v1.22.0
+        uses: snakemake/snakemake-github-action@v1.23.0
         with:
           directory: .
           snakefile: ./Snakefile
