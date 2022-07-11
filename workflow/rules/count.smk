@@ -61,7 +61,7 @@ rule order_mosaic_count_output:
         df.to_csv(output[0], index=False, compression="gzip", sep="\t")
 
 
-rule process_mosaic_info:
+rule filter_bad_cells_from_mosaic_count:
     input:
         info_raw = config["output_location"] + "counts/{sample}/{sample}.info_raw"
     output:
@@ -79,6 +79,29 @@ rule process_mosaic_info:
         print(df_removed)
         df_kept.to_csv(output.info, index=False, sep='\t', mode='a')
         df_removed.to_csv(output.info_removed, index=False, sep='\t', mode='a')
+
+        config_df = pd.read_csv(config["output_location"] + "config/config_df.tsv", sep="\t")
+        config_df_new = config_df.loc[config_df['cell'].isin(df_kept.cell.tolist())].to_csv(config["output_location"] + "config/config_df.tsv", sep="\t", index=False)
+
+
+
+# def aggregate_cells(wildcards):
+#     import pandas as pd
+#     print(checkpoints.filter_bad_cells_from_mosaic_count.get(sample=wildcards.sample).output.info, type(checkpoints.filter_bad_cells_from_mosaic_count.get(sample=wildcards.sample).output.info))
+#     df = pd.read_csv(checkpoints.filter_bad_cells_from_mosaic_count.get(sample=wildcards.sample).output.info, skiprows=13, sep="\t")
+#     print(df)
+#     cell_list = df.cell.tolist()
+#     print(cell_list)
+#     return config["output_location"] + "config/config_df.tsv"
+
+
+# rule aggregate:
+#     input:
+#         aggregate_cells
+#     output:
+#         config["output_location"] + "counts/{sample}/{sample}.test",
+#     shell:
+#         "touch {output}"
 
 # CHECKME : to keep or to improve ? @jeong @mc @kg
 ################################################################################

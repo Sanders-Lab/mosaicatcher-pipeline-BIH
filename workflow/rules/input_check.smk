@@ -7,7 +7,7 @@ rule generate_exclude_file_for_mosaic_count:
     output:
     """
     input:
-        ancient(config["output_location"] + "config/config_df.tsv"),
+        ancient(config["output_location"] + "config/config_df_raw.tsv"),
         bam = config["input_bam_location"]
     output:
         config["output_location"] + "config/exclude_file"

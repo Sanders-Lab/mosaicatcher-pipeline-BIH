@@ -21,17 +21,25 @@
 ##############################
 
 from collections import defaultdict
+def get_mem_mb(wildcards, attempt):
+    """
+    To adjust resources in the rules
+    attemps = reiterations + 1
+    Max number attemps = 8
+    """
+    mem_avail = [1, 2, 4, 8, 16, 64, 128, 256 ]
+    # print(mem_avail[attempt-1] * 1000, attempt, mem_avail)
+    return mem_avail[attempt-1] * 1000
 
 Testmode = False
 
-path_to_orig_samples = '/g/korbel2/weber/MosaiCatcher_files/POOLING/POOLING_LITE_HG00155'
+path_to_orig_samples = '/g/korbel2/weber/MosaiCatcher_files/POOLING/POOLING_POOL2'
 
 
-SAMPLE, BAM, ONEKG = glob_wildcards(path_to_orig_samples + "/{sm}/chm13/{id}_sorted_{sample_1000G}.bam")
+SAMPLE, BAM = glob_wildcards(path_to_orig_samples + "/{sm}/raw/{id}.bam")
 SAMPLES = sorted(set(SAMPLE))
 print(SAMPLE)
 print(BAM)
-print(ONEKG)
 
 ### THIS PART IS STOLEN FROM MOSAICATCHER ###
 CELL_PER_SAMPLE= defaultdict(list)
@@ -53,11 +61,16 @@ bais_all = []
 bams_select = []
 bais_select = []
 for s in SAMPLES:
-    bams_all.append(expand("{path}/{SM}/all/{ID}.bam", path=path_to_orig_samples, SM=s, ID=ALLBAMS_PER_SAMPLE[s]))
-    bais_all.append(expand("{path}/{SM}/all/{ID}.bam.bai", path=path_to_orig_samples, SM=s, ID=ALLBAMS_PER_SAMPLE[s]))
-    bams_select.append(expand("{path}/{SM}/selected/{ID}.bam", path=path_to_orig_samples, SM=s, ID=ALLBAMS_PER_SAMPLE[s]))
-    bais_select.append(expand("{path}/{SM}/selected/{ID}.bam", path=path_to_orig_samples, SM=s, ID=ALLBAMS_PER_SAMPLE[s]))
+    bams_all.extend(expand("{path}/{SM}/all/{ID}.bam", path=path_to_orig_samples, SM=s, ID=ALLBAMS_PER_SAMPLE[s]))
+    bais_all.extend(expand("{path}/{SM}/all/{ID}.bam.bai", path=path_to_orig_samples, SM=s, ID=ALLBAMS_PER_SAMPLE[s]))
+    bams_select.extend(expand("{path}/{SM}/selected/{ID}.bam", path=path_to_orig_samples, SM=s, ID=ALLBAMS_PER_SAMPLE[s]))
+    bais_select.extend(expand("{path}/{SM}/selected/{ID}.bam", path=path_to_orig_samples, SM=s, ID=ALLBAMS_PER_SAMPLE[s]))
 
+print(bams_all)
+
+print(path_to_orig_samples)
+print(SAMPLE)
+print(BAM)
 #bams_all = ['HG00513/all/HG00513_IV_045.bam']
 rule all:
     input:
@@ -69,10 +82,14 @@ rule all:
 
 rule change_id_and_sam:
     input:
-        bam_orig = expand("{path}/{SM}/chm13/{ID}_sorted_{sample_1000G}.bam", zip, path=path_to_orig_samples, SM=SAMPLE, ID=BAM, sample_1000G=ONEKG)
+        bam_orig = "{path}/{SM}/raw/{ID}.bam"
         #bam_orig = "{SM}/{ID}_sorted.bam"
     output:
         bam_out = "{path}/{SM}/all/{ID}.bam"
+    conda:
+        "mosaicatcher_env"
+    resources:
+        mem_mb = get_mem_mb,
     shell:
         """
         # First, the 'ID' tag
@@ -92,6 +109,10 @@ rule add_idx:
         bam = "{path}/{SM}/all/{ID}.bam"
     output:
         bai = "{path}/{SM}/all/{ID}.bam.bai"
+    conda:
+        "mosaicatcher_env"
+    resources:
+        mem_mb = get_mem_mb,
     shell:
         """
         samtools index {input.bam}
@@ -104,6 +125,8 @@ rule symlink_all_to_select:
     output:
         bam = "{path}/{SM}/selected/{ID}.bam",
         bai = "{path}/{SM}/selected/{ID}.bam.bai"
+    conda:
+        "mosaicatcher_env"
     shell:
         """
         ln -s ../all/{wildcards.ID}.bam {output.bam}

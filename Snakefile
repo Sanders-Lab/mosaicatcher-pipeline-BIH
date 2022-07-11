@@ -67,16 +67,16 @@ if config["containerized"] is True:
 
 
 if config["mode"] != "download_data":  
-    if os.path.isfile(config["output_location"] + "config/config_df.tsv") is False:
+    if os.path.isfile(config["output_location"] + "config/config_df_raw.tsv") is False:
         from workflow.scripts.utils import handle_input
         c = handle_input.HandleInput(
             input_path=config["input_bam_location"], 
-            output_path=config["output_location"] + "config/config_df.tsv", 
+            output_path=config["output_location"] + "config/config_df_raw.tsv", 
             check_sm_tag=config["check_sm_tag"]
             )
         df_config_files = c.df_config_files
     else:
-        df_config_files = pd.read_csv(config["output_location"] + "config/config_df.tsv", sep="\t")
+        df_config_files = pd.read_csv(config["output_location"] + "config/config_df_raw.tsv", sep="\t")
     # print(df_config_files)
     # exit()
 
