@@ -64,9 +64,15 @@ if config["ashleys_pipeline"] is False:
             > {log} 2>&1
             """
 
+    def get_bed(config):
+        if config["reference"] == "hg38":
+            return "workflow/data/bin_200kb_all.bed"
+        if config["reference"] == "mm10":
+            return "workflow/data/suh.mm10.bin_200kb_all.bed"
+        
     rule populate_counts:
         input:
-            bin_bed=ancient("workflow/data/bin_200kb_all.bed"),
+            bin_bed=ancient(get_bed),
             counts="{folder}/{sample}/counts/{sample}.txt.raw.gz",
         output:
             populated_counts="{folder}/{sample}/counts/{sample}.txt.populated.gz",
