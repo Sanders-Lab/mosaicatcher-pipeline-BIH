@@ -107,7 +107,7 @@ while (<FH_1>) {
 	my (undef, $chr, $start, $end) = split (/[\t ]+/, $_);
 	next if (exists ($seenSegDup{$chr}{$start}{$end}));
 	$seenSegDup{$chr}{$start}{$end}=1;
-	#print STDERR "($chr, $start, $end)\n";
+    # print STDERR "($chr, $start, $end)\n";
 	push (@{$SegDupStart{$chr}}, $start);
 	push (@{$SegDupEnd{$chr}}, $end);
 	$cntS++;
@@ -131,24 +131,33 @@ foreach my $chrom (sort keys %STARTs) {
 		next if (exists($Seen{$stD}{$enD}));
 		$Seen{$stD}{$enD}=1;
 		my $overlap_string=sprintf "0"x($enD-$stD+1); #Initialize" make long string of "0" with size ($enD-$stD+1)	
-		for (my $y=0; $y<@{$SegDupStart{$chrom}}; $y++) {
-			my $stS=$SegDupStart{$chrom}[$y]; my $enS=$SegDupEnd{$chrom}[$y];
-			if (($stD<=$stS) && ($stS<=$enD)) {
-				my ($EndPos) = sort {$a<=>$b} ($enD, $enS); #sort smaller EndVal
-				my $DupOvL = $EndPos-$stS+1;
-				#print "$overlap_string\n";
-				#print "vorher:", length ($overlap_string), "\n";
-				substr ($overlap_string, $stS-$stD+1, $DupOvL) = sprintf "1"x$DupOvL; #fill in "1" for each overlapping base	
-			} elsif (($stS<=$stD) && ($stD<=$enS)) {
-				my ($EndPos) = sort {$a<=>$b} ($enD, $enS); #sort smaller EndVal
-				my $DupOvL = $EndPos-$stD+1;
-				#print "vorher:", length ($overlap_string), "\n";
-				substr ($overlap_string, 0, $DupOvL) = sprintf "1"x$DupOvL; #fill in "1" for each overlapping base 
-				#print "nachher:", length ($overlap_string), "\n";
-				
-			}
-			
-		}
+
+        # Suh
+        # if chrom exists in segdup file, we loop through it.
+		if (exists($SegDupStart{$chrom}) && defined $SegDupStart{$chrom}) {
+
+            for (my $y=0; $y<@{$SegDupStart{$chrom}}; $y++) {
+                next unless (exists($SegDupStart{$chrom}) && defined $SegDupStart{$chrom});
+
+                my $stS=$SegDupStart{$chrom}[$y]; my $enS=$SegDupEnd{$chrom}[$y];
+                if (($stD<=$stS) && ($stS<=$enD)) {
+                    my ($EndPos) = sort {$a<=>$b} ($enD, $enS); #sort smaller EndVal
+                    my $DupOvL = $EndPos-$stS+1;
+                    #print "$overlap_string\n";
+                    #print "vorher:", length ($overlap_string), "\n";
+                    substr ($overlap_string, $stS-$stD+1, $DupOvL) = sprintf "1"x$DupOvL; #fill in "1" for each overlapping base	
+                } elsif (($stS<=$stD) && ($stD<=$enS)) {
+                    my ($EndPos) = sort {$a<=>$b} ($enD, $enS); #sort smaller EndVal
+                    my $DupOvL = $EndPos-$stD+1;
+                    #print "vorher:", length ($overlap_string), "\n";
+                    substr ($overlap_string, 0, $DupOvL) = sprintf "1"x$DupOvL; #fill in "1" for each overlapping base 
+                    #print "nachher:", length ($overlap_string), "\n";
+
+                }
+
+            }
+        }
+
 		my $overlap=0;
                 for (my $M=0; $M<length($overlap_string); $M++) { 
                      $overlap+=1 if (substr($overlap_string, $M, 1) eq "1");

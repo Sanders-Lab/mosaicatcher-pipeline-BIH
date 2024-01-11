@@ -72,7 +72,7 @@ if config["ashleys_pipeline"] is False:
         
     rule populate_counts:
         input:
-            bin_bed=ancient(get_bed),
+            bin_bed=ancient(get_bed(config)),
             counts="{folder}/{sample}/counts/{sample}.txt.raw.gz",
         output:
             populated_counts="{folder}/{sample}/counts/{sample}.txt.populated.gz",
