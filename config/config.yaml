@@ -22,7 +22,7 @@ plate_size: 96
 # --------------------------------------------------------
 
 # Absolute path to the data location (modify as needed)
-data_location: ".tests/data_CHR17"
+data_location: ""
 
 # Directory to publish important data (e.g., stats, plots, counts). Leave empty if not required.
 publishdir: ""
@@ -35,7 +35,7 @@ publishdir: ""
 input_bam_legacy: False
 
 # Enable/Disable ashleys-qc-pipeline module loading to start pipeline from FASTQ files
-ashleys_pipeline: False
+ashleys_pipeline: True
 
 # Target only output of ashleys-qc-pipeline
 ashleys_pipeline_only: False
