@@ -65,7 +65,7 @@ if config["ashleys_pipeline"] is False:
             """
 
     def get_bed(config):
-        if config["reference"] == "hg38":
+        if config["reference"] in ("hg38", "T2T"):
             return "workflow/data/bin_200kb_all.bed"
         if config["reference"] == "mm10":
             return "workflow/data/suh.mm10.bin_200kb_all.bed"
