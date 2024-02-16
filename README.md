@@ -7,7 +7,7 @@ Structural variant calling from single-cell Strand-seq data [Snakemake](https://
 # Quick installation on BIH
 
 ```{bash}
-git clone --recurse-submodules https://github.com/pweidner/mosaicatcher-pipeline-BIH.git
+git clone https://github.com/Sanders-Lab/mosaicatcher-pipeline-BIH.git
 ```
 
 ```{bash}
