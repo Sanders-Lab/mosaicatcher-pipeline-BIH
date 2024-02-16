@@ -4,6 +4,16 @@
 
 Structural variant calling from single-cell Strand-seq data [Snakemake](https://github.com/snakemake/snakemake) pipeline.
 
+# Quick installation on BIH
+
+```{bash}
+git clone --recurse-submodules https://github.com/pweidner/mosaicatcher-pipeline-BIH.git
+```
+
+```{bash}
+mamba create -n snakemake -c bioconda -c conda-forge -c defaults -c anaconda snakemake=7.32.0
+```
+
 # Overview of this workflow
 
 This workflow uses [Snakemake](https://github.com/snakemake/snakemake) to
