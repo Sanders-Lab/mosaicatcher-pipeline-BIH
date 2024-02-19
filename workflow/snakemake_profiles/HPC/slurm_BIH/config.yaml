@@ -51,6 +51,6 @@ keep-going: True
 # scheduler: greedy
 
 use-conda: true
-conda-frontend: "conda"
+conda-frontend: "mamba"
 use-singularity: true
 singularity-args: "-B /fast:/fast"
