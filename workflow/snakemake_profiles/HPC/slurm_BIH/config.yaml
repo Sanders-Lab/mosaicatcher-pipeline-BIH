@@ -31,9 +31,9 @@ set-resources:
   - regenotype_SNVs:partition=medium
   - call_SNVs_bcftools_chrom:partition=medium
   - run_strandphaser_per_chrom:partition=medium
-    #  - watson_crick_counts:partition=medium #modified from here
-    #  - watson_crick_counts:mem_mb=128000
-    #  - watson_crick_counts:time=10:00:00
+   #modified from here
+  - watson_crick_counts:mem_mb=8000
+  - watson_crick_counts:time=2-00:00:00
   - mergeBams:mem_mb=32000
   - mergeSortBams:mem_mb=32000
 ##
