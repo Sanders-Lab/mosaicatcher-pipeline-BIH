@@ -47,10 +47,10 @@ jobs: 100
 # 4 attempts to restart to correspond to the progressive memory increase solving OOM
 restart-times: 4
 keep-going: True
-# rerun-incomplete: True
+rerun-incomplete: True
 # scheduler: greedy
 
 use-conda: true
 conda-frontend: "mamba"
 use-singularity: true
-singularity-args: "-B /fast:/fast"
+singularity-args: "-B /data/cephfs-1:/data/cephfs-1"
