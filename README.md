@@ -11,7 +11,7 @@ git clone https://github.com/Sanders-Lab/mosaicatcher-pipeline-BIH.git
 ```
 
 ```{bash}
-mamba create -n snakemake -c bioconda -c conda-forge -c defaults -c anaconda snakemake=7.32.0
+mamba create -n snakemake -c bioconda -c conda-forge snakemake=7.32.0
 ```
 
 # Overview of this workflow
