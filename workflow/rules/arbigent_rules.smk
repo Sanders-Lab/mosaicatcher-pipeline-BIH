@@ -95,5 +95,7 @@ if config["arbigent"] is True:
             "{folder}/log/arbigent/mosaiClassifier_calc_probs_arbigent/{sample}.log",
         conda:
             "../envs/rtools.yaml"
+        resources:
+            mem_mb=get_mem_mb,
         script:
             "../scripts/arbigent_utils/mosaiclassifier_scripts/mosaiClassifier.snakemake.R"
