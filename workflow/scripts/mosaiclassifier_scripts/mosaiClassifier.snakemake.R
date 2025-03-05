@@ -19,11 +19,12 @@ strand <- strand[strand$chrom %in% chroms, ]
 segs <- segs[segs$chrom %in% chroms, ]
 
 # haplotypeMode?
-if ("CW" %in% strand$class) {
-  haplotypeMode <- T
-} else {
-  haplotypeMode <- F
-}
+haplotypeMode <- as.logical(snakemake@config[["haplotypeMode"]])
+# if ("CW" %in% strand$class) {
+#   haplotypeMode <- T
+# } else {
+#   haplotypeMode <- F
+# }
 
 d <- mosaiClassifierPrepare(counts, info, strand, segs)
 e <- mosaiClassifierCalcProbs(d, maximumCN = 4, haplotypeMode = haplotypeMode)

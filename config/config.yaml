@@ -38,7 +38,7 @@ ashleys_pipeline: True
 ashleys_pipeline_only: False
 
 # Threshold for Ashleys-qc binary classification
-ashleys_threshold: 0.5
+ashleys_threshold: 0
 
 # Enable or disable FastQC analysis
 MultiQC: False
@@ -124,7 +124,7 @@ chromosomes_to_exclude: []
 # --------------------------------------------------------
 
 # Enable or disable multistep normalization analysis
-multistep_normalisation: False
+multistep_normalisation: True
 
 # Advanced parameters for multi-step normalisation
 multistep_normalisation_options:
@@ -133,7 +133,7 @@ multistep_normalisation_options:
   min_reads_cell: 100000
 
 # Normalize or not mosaic counts using HGSVC-based reference file
-hgsvc_based_normalized_counts: True
+hgsvc_based_normalized_counts: False
 
 # Window size used by the mosaic binning algorithm
 window: 200000
@@ -149,14 +149,14 @@ hand_selection: False
 # --------------------------------------------------------
 
 # Enable / Disable multistep normalisation output for SV calling
-multistep_normalisation_for_SV_calling: False
+multistep_normalisation_for_SV_calling: True
 
 methods:
   lenient:
     method_name: "simpleCalls_llr4_poppriorsTRUE_haplotagsTRUE_gtcutoff0_regfactor6_filterFALSE"
     llr: 4
     poppriors: TRUE
-    haplotags: TRUE
+    haplotags: FALSE
     gtcutoff: 0
     regfactor: 6
     filter: "FALSE"
@@ -165,7 +165,7 @@ methods:
     method_name: "simpleCalls_llr4_poppriorsTRUE_haplotagsFALSE_gtcutoff0.05_regfactor6_filterTRUE"
     llr: 4
     poppriors: TRUE
-    haplotags: TRUE
+    haplotags: FALSE
     gtcutoff: 0.05
     regfactor: 6
     filter: "TRUE"
@@ -264,3 +264,6 @@ abs_path: "/"
 
 # Option to display all potential options - listed in config_metadata.yaml
 list_commands: False
+
+# haplotypeMode for mosaiclassifier call
+haplotypeMode: FALSE
