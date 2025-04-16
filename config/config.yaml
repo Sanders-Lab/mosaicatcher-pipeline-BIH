@@ -57,7 +57,7 @@ genecore_regex_element: "PE20"
 # --------------------------------------------------------
 
 # Reference genome used by BWA to map FASTQ files
-reference: "hg38"
+reference: "mm10"
 
 # Reference assemblies data
 references_data:
