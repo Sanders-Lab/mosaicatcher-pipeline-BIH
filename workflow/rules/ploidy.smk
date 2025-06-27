@@ -7,7 +7,7 @@ rule estimate_ploidy:
         "{folder}/log/estimate_ploidy/{sample}.log",
     threads: 48
     resources:
-        mem_mb=get_mem_mb,
+        mem_mb=get_mem_mb_heavy,
     params:
         # TODO move this to config
         merge_window=1000000,
