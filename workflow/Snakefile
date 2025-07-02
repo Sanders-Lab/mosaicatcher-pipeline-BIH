@@ -1,3 +1,5 @@
+from pathlib import Path
+
 configfile_location = "config/config.yaml"
 
 
@@ -109,22 +111,59 @@ include: "rules/gc.smk"
 include: "rules/debug.smk"
 
 
+plot_types = ["raw"]
+if config["multistep_normalisation"] is True:
+    plot_types.append("normalised")
+
 if config["list_commands"] is False:
     if config["ashleys_pipeline"] is True:
         if config["ashleys_pipeline_only"] is False:
-
             rule all:
                 input:
                     rules.ashleys_all.input,
                     get_final_output(),
+                    counts=expand("{folder}/{sample}/plots/counts/CountComplete.{plot_type}.pdf",
+                            folder=config["data_location"],
+                            sample=[f.name for f in Path(config["data_location"]).iterdir() if f.name not in ["config", "log"]],
+                            plot_type=plot_types
+                            ),
                 default_target: True
+                output:
+                    expand("{folder}/{sample}/plots/counts/{sample}_CountComplete.{plot_type}.pdf",
+                            folder=config["data_location"],
+                            sample=[f.name for f in Path(config["data_location"]).iterdir() if f.name not in ["config", "log"]],
+                            plot_type=plot_types
+                    ),
+                run:
+                    import os
+                    old_names = input.counts
+                    new_names  = output
+                    for old, new in zip(old_names, new_names):
+                        os.rename(old, new)
 
         else:
 
             rule all:
                 input:
                     rules.ashleys_all.input,
+                    counts=expand("{folder}/{sample}/plots/counts/CountComplete.{plot_type}.pdf",
+                            folder=config["data_location"],
+                            sample=[f.name for f in Path(config["data_location"]).iterdir() if f.name not in ["config", "log"]],
+                            plot_type=plot_types
+                            ),
                 default_target: True
+                output:
+                    expand("{folder}/{sample}/plots/counts/{sample}_CountComplete.{plot_type}.pdf",
+                            folder=config["data_location"],
+                            sample=[f.name for f in Path(config["data_location"]).iterdir() if f.name not in ["config", "log"]],
+                            plot_type=plot_types
+                    ),
+                run:
+                    import os
+                    old_names = input.counts
+                    new_names  = output
+                    for old, new in zip(old_names, new_names):
+                        os.rename(old, new)
 
     else:
 
