@@ -38,8 +38,11 @@ ashleys_pipeline: True
 ashleys_pipeline_only: False
 
 # Threshold for Ashleys-qc binary classification
-ashleys_threshold: 0.5
+ashleys_threshold: 0.85
 
+# Enable or disable ashleys-qc automatic classification
+bypass_ashleys: False
+  
 # Enable or disable FastQC analysis
 MultiQC: False
 
@@ -88,6 +91,12 @@ references_data:
     segdups: "workflow/data/segdups/segDups_mm10_UCSCtrack.bed.gz"
     snv_sites_to_genotype: ""
     reference_file_location: https://hgdownload.soe.ucsc.edu/goldenPath/mm10/bigZips/mm10.fa.gz
+"UC20":
+    reference_fasta: "workflow/data/ref_genomes/uc20.fa"
+    R_reference: "BSgenome.Hsapiens.UCSC.hg38"
+    segdups: "workflow/data/segdups/segDups_hg38_UCSCtrack.bed.gz"
+    snv_sites_to_genotype: ""
+    reference_file_location: https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/analysisSet/hg38.analysisSet.fa.gz
 
 # List of chromosomes to process
 chromosomes:
@@ -252,6 +261,7 @@ strandscape_labels_path: ""
 # --------------------------------------------------------
 # Internal Parameters
 # --------------------------------------------------------
+
 
 # Is the pipeline used as a submodule in mosaicatcher-pipeline?
 mosaicatcher_pipeline: True

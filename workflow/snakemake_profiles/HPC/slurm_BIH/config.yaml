@@ -14,35 +14,52 @@ cluster: mkdir -p logs/{rule} errors/{rule} &&
 default-resources:
   - partition=medium ## MODIFIED
   - qos=normal
-  - mem_mb=1000
+  - mem_mb=2000
   - time="00:30:00"
 
 ## MODIFIED
 set-resources:
-  - install_T2T_BSgenome_tarball:partition=medium
-  - samtools_faindex:partition=medium
-  - create_haplotag_table:partition=medium
-  - mosaiClassifier_calc_probs:partition=medium
-  - create_haplotag_likelihoods:partition=medium
-  - mosaiClassifier_make_call:partition=medium
-  - mosaiClassifier_make_call_biallelic:partition=medium
-  - call_complex_regions:partition=medium
-  - mergeSortBams:partition=medium
-  - regenotype_SNVs:partition=medium
-  - call_SNVs_bcftools_chrom:partition=medium
-  - run_strandphaser_per_chrom:partition=medium
-   #modified from here
-  - watson_crick_counts:mem_mb=8000
-  - watson_crick_counts:time=2-00:00:00
-  - mergeBams:mem_mb=32000
-  - mergeSortBams:mem_mb=32000
-##
 
+  ## Alignment (moved to short for cohorts)
+  - ashleys_bwa_strandseq_to_reference_alignment:partition=short
+  - ashleys_bwa_strandseq_to_reference_alignment:time=0-02:00:00
+  - ashleys_mark_duplicates:partition=short
+  - ashleys_mark_duplicates:time=0-01:00:00
+  - ashleys_samtools_sort_bam:partition=short
+  - ashleys_samtools_sort_bam:time=0-01:00:00
+  - index_input_bam:partition=short
+  - index_input_bam:time=0-01:00:00
+  - watson_crick_counts:mem_mb=64000
+  - watson_crick_counts:time=2-00:00:00
+  - mergeBams:mem_mb=128000
+  - mergeSortBams:mem_mb=128000
+  - mergeSortBams:time=2-00:00:00
+  - index_merged_bam:mem_mb=64000
+  - mosaiClassifier_calc_probs_arbigent:mem_mb=64000
+  - install_T2T_BSgenome_tarball:mem_mb=64000
+  - create_haplotag_table:mem_mb=64000
+  - create_haplotag_table:time=1-00:00:00
+  - mosaiClassifier_calc_probs:mem_mb=32000
+  - create_haplotag_likelihoods:mem_mb=32000
+  - mosaiClassifier_make_call:mem_mb=64000
+  - mosaiClassifier_make_call_biallelic:mem_mb=32000
+  - call_complex_regions:mem_mb=32000
+  - regenotype_SNVs:mem_mb=64000
+  - call_SNVs_bcftools_chrom:mem_mb=32000
+  - estimate_ploidy:mem_mb=32000
+  - ashleys_populate_counts:mem_mb=32000
+  - ashleys_generate_features:mem_mb=128000
+  - ashleys_predict:mem_mb=32000
+  - ashleys_generate_features:partition=medium
+  - index_indiv_strandphaser_vcf:mem_mb=64000
+  - run_strandphaser_per_chrom:time=1-00:00:00
+  - run_strandphaser_per_chrom:threads=32
+  - run_strandphaser_per_chrom:partition=medium
 max-jobs-per-second: 100
-max-status-checks-per-second: 100
+max-status-checks-per-second: 90
 local-cores: 1
 latency-wait: 60
-jobs: 100
+jobs: 500
 
 # 4 attempts to restart to correspond to the progressive memory increase solving OOM
 restart-times: 4

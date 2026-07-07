@@ -57,6 +57,7 @@ rule run_strandphaser_per_chrom:
     resources:
         mem_mb=get_mem_mb_heavy,
         time="10:00:00",
+        threads=32,
     params:
         input_bam=lambda wc: "{}/{}/selected".format(config["data_location"], wc.sample),
         output=lambda wc: "{}/{}/strandphaser/StrandPhaseR_analysis.{}".format(
