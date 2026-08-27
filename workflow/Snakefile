@@ -127,6 +127,10 @@ if config["list_commands"] is False:
                             sample=[f.name for f in Path(config["data_location"]).iterdir() if f.name not in ["config", "log"]],
                             plot_type=plot_types
                             ),
+                    par=expand("{folder}/{sample}/mosaiclassifier/sv_probabilities/probabilities.proc.parquet",
+                            folder=config["data_location"],
+                            sample=[f.name for f in Path(config["data_location"]).iterdir() if f.name not in ["config", "log"]],
+                            ),
                 default_target: True
                 output:
                     expand("{folder}/{sample}/plots/counts/{sample}_CountComplete.{plot_type}.pdf",

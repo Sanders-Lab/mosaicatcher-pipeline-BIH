@@ -1,0 +1,12 @@
+name: rtools_probs
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - r-base
+  - r-data.table
+  - r-dplyr
+  - r-arrow
+  - r-assertthat
+  - r-stringr
+  - bioconductor-genomicranges

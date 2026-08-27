@@ -154,3 +154,16 @@ rule save_config:
         mem_mb=get_mem_mb,
     script:
         "../scripts/utils/dump_config.py"
+
+rule convert_probs_parquet:
+    input:
+        rdata="{folder}/{sample}/mosaiclassifier/haplotag_likelihoods/{sample}.Rdata",
+    output:
+        par="{folder}/{sample}/mosaiclassifier/sv_probabilities/probabilities.proc.parquet",
+    conda:
+        "../envs/rtools_probs.yaml"
+    resources:
+        mem_mb=get_mem_mb_heavy,
+    container: None
+    shell:
+        "Rscript workflow/scripts/utils/convert_probabilities_rds_parquet.R {input.rdata} {output.par}"
