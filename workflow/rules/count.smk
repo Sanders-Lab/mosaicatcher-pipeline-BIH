@@ -191,7 +191,7 @@ if (
 
     rule merge_blacklist_bins_for_norm:
         input:
-            norm=ancient("workflow/data/normalization/{reference}/HGSVC.{window}.txt"),
+            norm=ancient("workflow/data/normalization/{reference}/HGSVC.{window}_noBL.txt"),
             whitelist=ancient("workflow/data/normalization/inversion-whitelist.tsv"),
         output:
             merged="{folder}/{sample}/normalizations/{reference}/HGSVC.{window}.merged.tsv",
@@ -211,7 +211,7 @@ else:
     rule merge_blacklist_bins:
         input:
             norm=ancient(
-                "workflow/data/arbigent/normalization/{reference}/HGSVC.{window}.txt"
+                "workflow/data/arbigent/normalization/{reference}/HGSVC.{window}_noBL.txt"
             ),
         output:
             merged="{folder}/{sample}/normalizations/{reference}/HGSVC.{window}.merged.tsv",
@@ -240,7 +240,7 @@ if config["blacklist_regions"] is True:
             mem_mb=get_mem_mb,
         shell:
             """
-            awk 'BEGIN {{FS=OFS="\t"}} {{if (NF < 5 || $5 == "") $5 = "None"}} 1' {input} > {output}
+            awk 'BEGIN {{FS=OFS="\t"}} {{if (NF < 5 || $5 == "") $5 = "good"}} 1' {input} > {output}
             """
 
     rule normalize_counts:
