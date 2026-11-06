@@ -1,40 +1,40 @@
 library(data.table)
 library(stringr)
 library(arrow)
-# setwd("/data/cephfs-1/work/projects/sanders-digital-karyotype/mosaicatcher-pipeline-BIH")
+setwd("/data/cephfs-1/work/projects/sanders-digital-karyotype/pipelines/mosaicatcher-pipeline-BIH")
 source("workflow/scripts/mosaiclassifier_scripts/mosaiClassifier/mosaiClassifier.R")
 
 
-# data.table::setDTthreads(15)
-# data.table::getDTthreads()
 ################################################################################
 # inputs
 ################################################################################
 args <- commandArgs(trailingOnly = TRUE)
 rdata_file <- args[1]
 par_out <- args[2]
-# rdata_file <- "~/sanders-digital-karyotype/Digital-Karyotype-SubCohorts/RPE-TALL"
 
 
 read_save_parquet <- function(file, out_file) {
     dt <- readRDS(file)
     message(stringr::str_glue("RDS read..."))
-    dt <- mosaiClassifierPostProcessing(dt, 1e-10)
+    dt <- mosaiClassifierPostProcessing(dt, haplotypeMode=T, regularizationFactor=1e-10)
+    
+    # pop priors
+    dt[, pop.prior := sum(nb_hap_ll), by = .(chrom, start, end, sample, haplotype)]
+    dt[, pop.prior := pop.prior / sum(pop.prior), by = .(chrom, start, end, sample, cell)]
+    dt[, nb_hap_pp := nb_hap_pp * pop.prior]
+    print("pop_priors applied")
 
-    # keeping only useful columns
-    dt <- dt[, .(chrom, start, end, sample, cell, num_bins, haplotype, nb_hap_pp)]
+    # haplotag_probs
+    dt[!is.na(haplotag.prob), nb_hap_pp := nb_hap_pp * haplotag.prob]
+    print("haplotag probs applied")
 
-    sample <- dt[, unique(sample)]
-    # out_file <- file.path(dirname(file),
-    #                       "probabilities.parquet"
-    # )
+    dt <- dt[, .(chrom, start, end, sample, cell, num_bins, haplotype, haplotag.prob, nb_hap_pp)]
+
     message(stringr::str_glue("Saving to file: {out_file}"))
-    # data.table::fwrite(dt, out_file, sep = "\t")
     arrow::write_parquet(x = dt,
                          sink = out_file,
                          compression = "brotli",
                          use_dictionary = FALSE
-    )
 }
 
 read_save_parquet(rdata_file, par_out)
