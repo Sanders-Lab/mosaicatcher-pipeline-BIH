@@ -11,8 +11,12 @@ getMultinomialParams <- function(haploSegType, alpha) {
     CNs <- rep(-1, 4)
   } else {
     CNs <- as.numeric(unlist(strsplit(haploSegType, "")))
-    CNs[CNs == 0] <- alpha
+    # CNs[CNs == 0] <- alpha
+    # CNs <- CNs / sum(CNs)
+    is_zero <- CNs == 0
     CNs <- CNs / sum(CNs)
+    CNs[is_zero] <- alpha
+    CNs[!is_zero] <- CNs[!is_zero] * (1 - (alpha * sum(is_zero)))
   }
 
   return(list(
