@@ -35,6 +35,7 @@ read_save_parquet <- function(file, out_file) {
                          sink = out_file,
                          compression = "brotli",
                          use_dictionary = FALSE
+                         )
 }
 
 read_save_parquet(rdata_file, par_out)
