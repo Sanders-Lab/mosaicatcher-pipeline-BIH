@@ -28,6 +28,9 @@ read_save_parquet <- function(file, out_file) {
     dt[!is.na(haplotag.prob), nb_hap_pp := nb_hap_pp * haplotag.prob]
     print("haplotag probs applied")
 
+    # normalising each prob dist
+    dt[, nb_hap_pp := nb_hap_pp / sum(nb_hap_pp), by = .(sample, cell, chrom, start, end)]
+
     dt <- dt[, .(chrom, start, end, sample, cell, num_bins, haplotype, haplotag.prob, nb_hap_pp)]
 
     message(stringr::str_glue("Saving to file: {out_file}"))
